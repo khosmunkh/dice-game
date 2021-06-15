@@ -1,20 +1,20 @@
 
+//Тоглоом дууссан эсэхийг шалгах хувьсагч;
+var isNewGame;
+// Одоо эргүүлж буй тоглогчийн ээлжийн оноог хадгалах хувьсагч
 var roundScore = 0;
 // Тоглогчдын цуглуулсан оноог хадгалах хувьсагч 
 var playerScores= [0 , 0];
-
-// Одоо эргүүлж буй тоглогчийн ээлжийн оноог хадгалах хувьсагч
-
 var activePlayer = 0;
 var diceDom = document.querySelector(".dice");
 
 newGame();
-function newGame(){ 
+//Програм эхлэхэд бэлтгье  
+function newGame(){
+    isNewGame = true;
     roundScore = 0;
     playerScores= [0 , 0];
     activePlayer = 0;
-//window.document.querySelector('#score-0').textContent = dice;
-//Програм эхлэхэд бэлтгье  
     document.getElementById('name-0').textContent='Player 1';
     document.getElementById('name-1').textContent='Player 2';
     document.getElementById('current-0').textContent = '0';
@@ -33,7 +33,7 @@ function newGame(){
     
 }
 
-// Шоог шидэх эвент листенэр 
+
 
 function playerSwitchToNextPlayer(){
     roundScore = 0;
@@ -44,11 +44,12 @@ function playerSwitchToNextPlayer(){
     diceDom.style.display = "none";
 
 }
-
+// Шоог шидэх эвент листенэр 
 document.querySelector('.btn-roll').addEventListener("click" ,function() 
 {   
     // Шооны аль талаараа буусныг хадгалах хувьсагч, 1-6 утгыг энэ хувьсагчид санамсаргүйгээр үүсгэж өгнө
-    var diceNumber = Math.floor(Math.random()*6) + 1;
+    if (isNewGame){
+        var diceNumber = Math.floor(Math.random()*6) + 1;
     
     diceDom.style.display = "block";
     
@@ -63,25 +64,34 @@ document.querySelector('.btn-roll').addEventListener("click" ,function()
         playerSwitchToNextPlayer();
 
     }
+    }
+    else{
+        alert("Тоглоом дууссан байна, New game товч даран дахин тоглоно уу :P");
+    }
+
 });
 
 
 //Hold товчны эвент листенэр
 
 document.querySelector('.btn-hold').addEventListener('click',function(){
-playerScores[activePlayer] = playerScores[activePlayer] + roundScore;
+if(isNewGame)
+{
+    playerScores[activePlayer] = playerScores[activePlayer] + roundScore;
 document.getElementById('score-' +activePlayer).textContent = playerScores[activePlayer];  
-if(playerScores[activePlayer] >= 100){
-    document.getElementById('name-' + activePlayer).textContent = "Winner";
+if(playerScores[activePlayer] >= 50){
+    isNewGame = false;
+    document.getElementById('name-' + activePlayer).textContent = "Winner!";
     document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
     document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
 } 
 else{
     playerSwitchToNextPlayer();
 }
-
-
-
+}
+else{
+    alert("Тоглоом дууссан байна, New game товч даран дахин тоглоно уу :P");
+}
 });
 
 //Шинэ тоглоом эхлүүлэх товчны эвент листенэр
